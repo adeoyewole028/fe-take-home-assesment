@@ -20,7 +20,7 @@ describe('DeviceTable', () => {
     const devices: DeviceBatteryStat[] = [
       row({ serialNumber: 'A', averageDailyDrainPct: 10, unhealthy: false }), // Healthy
       row({ serialNumber: 'B', averageDailyDrainPct: 25, unhealthy: false }), // Warning
-      row({ serialNumber: 'C', averageDailyDrainPct: 45, unhealthy: true }), // Critical
+      row({ serialNumber: 'C', averageDailyDrainPct: 30, unhealthy: true }), // Critical
       row({ serialNumber: 'D', averageDailyDrainPct: null, unhealthy: false }) // Unknown
     ];
   const { container } = render(DeviceTable, { props: { devices } });

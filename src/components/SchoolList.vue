@@ -1,5 +1,5 @@
 <template>
-  <div class="space-y-6"> 
+  <div class="space-y-6">
     <div
       v-if="error"
       class="rounded-md border border-red-300 bg-red-50 px-4 py-3 text-red-800 text-sm"
@@ -85,8 +85,8 @@ import DeviceTable from './DeviceTable.vue';
 const props = defineProps<{
   summaries: SchoolBatterySummary[];
   error: string | null;
-  expandTrigger?: number; // increment to force expand all
-  collapseTrigger?: number; // increment to force collapse all
+  expandTrigger?: number;
+  collapseTrigger?: number;
 }>();
 
 const open = ref<Set<number>>(new Set());
@@ -96,33 +96,32 @@ function toggle(id: number) {
   open.value = new Set(open.value);
 }
 function expandAllCurrent() {
-  open.value = new Set(props.summaries.map(s => s.academyId));
+  open.value = new Set(props.summaries.map((s) => s.academyId));
 }
 function collapseAllCurrent() {
   if (open.value.size) {
     open.value = new Set();
   }
 }
-// Whenever expandTrigger changes (incremented by parent) expand all rows
+
 watch(
   () => props.expandTrigger,
   () => {
     if (props.expandTrigger !== undefined) expandAllCurrent();
   }
 );
-// Whenever collapseTrigger changes collapse all
+
 watch(
   () => props.collapseTrigger,
   () => {
     if (props.collapseTrigger !== undefined) collapseAllCurrent();
   }
 );
-// If the list of summaries changes while fully expanded, keep them expanded
+
 watch(
   () => props.summaries,
   (newVal, oldVal) => {
     if (open.value.size && open.value.size === (oldVal?.length || 0)) {
-      // assume previously fully expanded; add any new ids
       for (const s of newVal) open.value.add(s.academyId);
       open.value = new Set(open.value);
     }

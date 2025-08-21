@@ -30,7 +30,7 @@ export function calculateDeviceStat(samples: BatterySample[]): DeviceBatteryStat
     const deltaLevel = current.batteryLevel - next.batteryLevel;
     const deltaHours = (next.ts - current.ts) / 3_600_000;
     if (deltaHours <= 0) continue;
-    if (deltaLevel <= 0) continue; // charging or plateau
+    if (deltaLevel <= 0) continue; // charging
 
     const drainPerDay = ((deltaLevel * 100) / deltaHours) * 24; // fraction -> percent
     weightedSum += drainPerDay * deltaHours;

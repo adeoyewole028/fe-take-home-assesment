@@ -6,7 +6,7 @@
         Devices draining &gt; 30% per day are flagged as unhealthy.
       </p>
     </header>
-  <section v-if="!loading" class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+    <section v-if="!loading" class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
       <div class="stat-card">
         <div class="text-xs uppercase tracking-wide text-gray-500 font-medium">
           Unhealthy Devices
@@ -53,7 +53,11 @@
       <button
         @click="toggleCritical()"
         class="inline-flex items-center gap-2 rounded-md border px-3 py-1.5 text-xs font-medium transition-colors"
-        :class="criticalOnly ? 'bg-red-600 text-white border-red-600 hover:bg-red-500' : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'"
+        :class="
+          criticalOnly
+            ? 'bg-red-600 text-white border-red-600 hover:bg-red-500'
+            : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'
+        "
         type="button"
       >
         <span v-if="criticalOnly">Showing Critical Only (click to show all)</span>
@@ -66,17 +70,19 @@
       >
         {{ allExpanded ? 'Collapse All' : 'Expand All' }}
       </button>
-      <span class="text-[11px] text-gray-400" v-if="criticalOnly">Filtered view: only devices with tier Critical (&gt;= 30% daily drain)</span>
+      <span class="text-[11px] text-gray-400" v-if="criticalOnly"
+        >Filtered view: only devices with tier Critical (&gt;= 30% daily drain)</span
+      >
     </div>
     <section>
       <div v-if="loading" class="text-gray-500">Loading data...</div>
-  <SchoolList
-    v-else
-    :summaries="filteredSummaries"
-    :error="error"
-    :expandTrigger="expandTrigger"
-    :collapseTrigger="collapseTrigger"
-  />
+      <SchoolList
+        v-else
+        :summaries="filteredSummaries"
+        :error="error"
+        :expandTrigger="expandTrigger"
+        :collapseTrigger="collapseTrigger"
+      />
     </section>
   </main>
 </template>
@@ -117,12 +123,11 @@ const overallClass = computed(() => {
   return 'text-emerald-600';
 });
 const criticalOnly = ref(false);
-const expandTrigger = ref(0); // increment to signal all rows should expand
-const collapseTrigger = ref(0); // increment to signal all rows should collapse
+const expandTrigger = ref(0);
+const collapseTrigger = ref(0);
 const allExpanded = ref(false);
 function toggleCritical() {
   criticalOnly.value = !criticalOnly.value;
-  // after changing filter, auto expand to show context
   expandTrigger.value++;
   allExpanded.value = true;
 }
@@ -135,17 +140,20 @@ function toggleAll() {
     allExpanded.value = true;
   }
 }
-// Critical threshold aligned with DeviceTable classification (>=40%)
 const filteredSummaries = computed(() => {
   if (!criticalOnly.value) return summaries.value;
-  return summaries.value.map(s => ({
-    ...s,
-    devices: s.devices.filter(d => d.averageDailyDrainPct != null && d.averageDailyDrainPct >= 30)
-  })).filter(s => s.devices.length > 0);
+  return summaries.value
+    .map((s) => ({
+      ...s,
+      devices: s.devices.filter(
+        (d) => d.averageDailyDrainPct != null && d.averageDailyDrainPct >= 30
+      )
+    }))
+    .filter((s) => s.devices.length > 0);
 });
 onMounted(load);
 </script>
-<style scoped> 
+<style scoped>
 .stat-card {
   border-radius: 0.75rem;
   border: 1px solid #e5e7eb;
